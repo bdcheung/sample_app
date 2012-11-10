@@ -21,7 +21,12 @@ class UsersController < ApplicationController
   end
   
   def new
+    unless signed_in?
       @user = User.new
+    else
+      flash[:info] = "You are already logged in, so you cannot create a new account"
+      redirect_to root_path
+    end
   end
   
   def create
@@ -53,7 +58,7 @@ class UsersController < ApplicationController
 	redirect_to signin_url, notice: "Please sign in."
       end
     end
-
+    
     def correct_user
       @user = User.find(params[:id])
       redirect_to(root_path) unless current_user?(@user)
